@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :tool_go, ToolGo.Repo,
   username: "postgres",
-  password: "admin",
+  password: "abc@123#",
   hostname: "localhost",
   database: "tool_go_dev",
   stacktrace: true,
