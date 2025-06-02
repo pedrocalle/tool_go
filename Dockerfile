@@ -9,6 +9,7 @@ WORKDIR /app
 COPY mix.exs mix.lock ./ 
 COPY config ./config
 RUN mix local.hex --force && mix local.rebar --force
+RUN ecto.migrate
 RUN mix deps.get
 
 # Build release
