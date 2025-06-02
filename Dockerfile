@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM elixir:1.17-alpine AS build
+FROM public.ecr.aws/docker/library/elixir:1.17 AS build
 
 RUN apk add --no-cache build-base git python3
 
