@@ -7,6 +7,15 @@ defmodule ToolGoWeb.Router do
 
   scope "/api", ToolGoWeb do
     pipe_through :api
+    resources "/user", UserController, only: [:create, :show, :update, :delete]
+    post "/user/login", UserController, :login
+    get "/tool", ToolController, :read_all
+    resources "/delivery_tracking", DeliveryTrackerController, only: [:create, :show, :update, :delete]
+    resources "/delivery_man", DeliveryManController, only: [:create, :show, :update, :delete]
+    resources "/order_item", OrderItemController, only: [:create, :show, :update, :delete]
+    resources "/order", OrderController, only: [:create, :show, :update, :delete]
+    resources "/store", StoreController, only: [:create, :show, :update, :delete]
+    resources "/tool", ToolController, only: [:create, :show, :update, :delete]
   end
 
   # Enable LiveDashboard in development

@@ -4,7 +4,7 @@ defmodule ToolGo.Stores.Store do
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
   @foreign_key_type Ecto.UUID
-  @required_params [:name, :email, :vehicle, :phone, :vehicle_plate, :status]
+  @required_params [:name, :address, :phone, :open_time, :close_time, :email, :estimated_time]
 
   schema "stores" do
     field :name, :string
@@ -14,7 +14,6 @@ defmodule ToolGo.Stores.Store do
     field :close_time, :utc_datetime
     field :email, :string
     field :estimated_time, :integer
-    field :password_hash, :string
 
     timestamps()
   end

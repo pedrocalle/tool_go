@@ -38,8 +38,8 @@ defmodule ToolGo.Users.User do
   end
 
   defp add_password_hash(%Changeset{valid?: true, changes: %{password: password}} = changeset) do
-    salt = Argon2.Base.gen_salt()
-    change(changeset, %{password_hash: Argon2.Base.hash_password(password, salt)})
+    salt = Pbkdf2.Base.gen_salt()
+    change(changeset, %{password_hash: Pbkdf2.Base.hash_password(password, salt)})
   end
 
   defp add_password_hash(changeset), do: changeset

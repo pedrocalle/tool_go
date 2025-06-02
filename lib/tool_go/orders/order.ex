@@ -7,7 +7,7 @@ defmodule ToolGo.Orders.Order do
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
   @foreign_key_type Ecto.UUID
-  @required_params [:name, :description, :price, :quantity, :image_url]
+  @required_params [:status, :store_id, :total_value, :order_date, :delivery_address]
 
   schema "orders" do
     belongs_to :store, Store

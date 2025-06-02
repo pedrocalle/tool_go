@@ -5,12 +5,11 @@ defmodule ToolGo.DeliveriesTracking.DeliveryTracking do
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
   @foreign_key_type Ecto.UUID
-  @required_params [:status, :timestamp, :order_id]
+  @required_params [:status, :order_id]
 
   schema "deliveries_tracking" do
     belongs_to :order, Order
     field :status, :string
-    field :timestamp, :utc_datetime_usec
 
     timestamps()
   end
