@@ -16,7 +16,17 @@
           "protocol": "tcp"
         }
       ],
-      "environment": [{ "name": "MIX_ENV", "value": "prod" }]
+      "environment": [
+        { "name": "MIX_ENV", "value": "prod" },
+        {
+          "name": "DATABASE_URL",
+          "value": "ecto://postgres:cx4OFo8eJ6TzKoofAwGrBmmGk@tool-go-db.ch0uy8q4olbz.us-east-2.rds.amazonaws.com:5432/tool-go-db"
+        },
+        {
+          "name": "SECRET_KEY_BASE",
+          "value": "OmGVRAr41HUT9GvBJy+tq0pFDygymA/MgHo0A9aj4MkJN3lOc37HG/dTWFX1HZIW"
+        }
+      ]
     }
   ]
 }
