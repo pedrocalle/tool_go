@@ -1,10 +1,7 @@
 # Stage 1: Build
 FROM public.ecr.aws/docker/library/elixir:1.17 AS build
 
-RUN apt-get update && \
-    apt-get install -y build-essential git python3 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential git python3
 
 WORKDIR /app
 
@@ -19,12 +16,9 @@ COPY . .
 RUN MIX_ENV=prod mix release
 
 # Stage 2: Runtime
-FROM debian:bookworm-slim AS app
+FROM public.ecr.aws/debian/debian:bookworm-slim AS app
 
-RUN apt-get update && \
-    apt-get install -y libssl3 libstdc++6 ca-certificates && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libstdc++6 openssl libncurses6 && apt-get clean
 
 WORKDIR /app
 
