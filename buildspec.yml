@@ -25,10 +25,8 @@ phases:
       - echo "Build completed on $(date)"
       - echo "Pushing the Docker image to ECR..."
       - docker push "${ECR_IMAGE_URI}"
-      - echo "Updating ECS task definition..."
-      - sed -i "s|<ECR_IMAGE_URI>|${ECR_IMAGE_URI}|g" taskDefinition.json
-      - aws ecs register-task-definition --cli-input-json file://taskDefinition.json
+      - printf '[{"name":"tool_go","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
-    - taskDefinition.json
+    - imagedefinitions.json
