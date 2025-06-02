@@ -22,7 +22,6 @@ RUN apk add --no-cache libstdc++ openssl ncurses
 
 WORKDIR /app
 COPY --from=build /app/_build/prod/rel/tool_go ./
-COPY --from=build /app/priv/certs ./priv/certs
 
 ENV HOME=/app
 ENV MIX_ENV=prod
