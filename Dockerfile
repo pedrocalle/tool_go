@@ -10,7 +10,6 @@ COPY mix.exs mix.lock ./
 COPY config ./config
 RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get
-RUN ecto.migrate
 
 # Build release
 COPY . .
