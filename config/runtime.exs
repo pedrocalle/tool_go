@@ -31,10 +31,15 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :tool_go, ToolGo.Repo,
-    # ssl: true,
+    ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-    socket_options: maybe_ipv6
+    socket_options: maybe_ipv6,
+    ssl_opts: [
+      cacertfile: Path.expand("priv/certs/rds-combined-ca-bundle.pem", __DIR__),
+      verify: :verify_peer,
+      server_name_indication: String.to_charlist(URI.parse(database_url).host)
+    ]
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you

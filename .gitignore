@@ -22,6 +22,8 @@ erl_crash.dump
 # Temporary files, for example, from tests.
 /tmp/
 
+/rel
+
 # Ignore package tarball (built via "mix hex.build").
 tool_go-*.tar
 
