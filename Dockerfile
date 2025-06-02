@@ -1,13 +1,16 @@
 # Stage 1: Build
 FROM public.ecr.aws/docker/library/elixir:1.17 AS build
 
-RUN apk add --no-cache build-base git python3
+RUN apt-get update && \
+    apt-get install -y build-essential git python3 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Cache deps
-COPY mix.exs mix.lock ./
-COPY config config
+COPY mix.exs mix.lock ./ 
+COPY config ./config
 RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get
 
@@ -16,14 +19,17 @@ COPY . .
 RUN MIX_ENV=prod mix release
 
 # Stage 2: Runtime
-FROM alpine:3.19 AS app
+FROM debian:bookworm-slim AS app
 
-RUN apk add --no-cache libstdc++ openssl ncurses
+RUN apt-get update && \
+    apt-get install -y libssl3 libstdc++6 ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
 COPY --from=build /app/_build/prod/rel/tool_go ./
 COPY --from=build /app/priv/certs ./priv/certs
-
 
 ENV HOME=/app
 ENV MIX_ENV=prod
