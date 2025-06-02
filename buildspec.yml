@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    ECR_REPOSITORY: "tool-go"
-    AWS_DEFAULT_REGION: "us-east-2"
+    ECR_REPOSITORY: "tool-go" # Nome do repositório no ECR
+    AWS_DEFAULT_REGION: "us-east-1" # Sua região AWS
 
 phases:
   pre_build:
@@ -11,7 +11,8 @@ phases:
       - echo "Setting variables..."
       - export AWS_ACCOUNT_ID=$(echo $CODEBUILD_BUILD_ARN | awk -F ':' '{print $5}')
       - export ECR_MAIN_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-      - export ECR_IMAGE_URI="${ECR_MAIN_URI}/${ECR_REPOSITORY}:${CODEBUILD_RESOLVED_SOURCE_VERSION:0:8}"
+      - export SHORT_COMMIT=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-8)
+      - export ECR_IMAGE_URI="${ECR_MAIN_URI}/${ECR_REPOSITORY}:${SHORT_COMMIT}"
       - echo "Logging into ECR..."
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_MAIN_URI
 
@@ -25,9 +26,8 @@ phases:
       - echo "Build completed on $(date)"
       - echo "Pushing the Docker image to ECR..."
       - docker push "${ECR_IMAGE_URI}"
-      - echo "Writing image definitions file..."
+      - echo "Updating ECS task definition..."
       - sed -i "s|<ECR_IMAGE_URI>|${ECR_IMAGE_URI}|g" taskDefinition.json
-      - echo "Registering new ECS task definition..."
       - aws ecs register-task-definition --cli-input-json file://taskDefinition.json
 
 artifacts:
