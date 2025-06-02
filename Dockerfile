@@ -13,7 +13,7 @@ RUN mix deps.get
 
 # Build release
 COPY . .
-RUN MIX_ENV=prod mix release
+RUN MIX_ENV=prod mix release --no-compile --no-deps-check
 
 # Stage 2: Runtime
 FROM alpine:3.19 AS app
