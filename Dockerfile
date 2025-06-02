@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y libstdc++6 openssl libncurses6 && apt-g
 WORKDIR /app
 
 COPY --from=build /app/_build/prod/rel/tool_go ./
-COPY --from=build /app/priv/certs ./priv/certs
+COPY --from=build /app/priv ./priv
 
 ENV HOME=/app
 ENV MIX_ENV=prod

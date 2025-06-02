@@ -31,10 +31,11 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   cacertfile =
-  Path.join(
+  Path.join([
     :code.priv_dir(:tool_go),
-    "certs/rds-combined-ca-bundle.pem"
-  )
+    "certs",
+    "rds-combined-ca-bundle.pem"
+  ])
 
   config :tool_go, ToolGo.Repo,
     ssl: true,
