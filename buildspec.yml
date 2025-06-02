@@ -11,21 +11,20 @@ phases:
       - echo "Setting variables..."
       - export AWS_ACCOUNT_ID=$(echo $CODEBUILD_BUILD_ARN | awk -F ':' '{print $5}')
       - export ECR_MAIN_URI="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-      - export SHORT_COMMIT=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-8)
-      - export ECR_IMAGE_URI="${ECR_MAIN_URI}/${ECR_REPOSITORY}:${SHORT_COMMIT}"
+      - export ECR_IMAGE_URI="${ECR_MAIN_URI}/${ECR_REPOSITORY}:latest"
       - echo "Logging into ECR..."
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_MAIN_URI
 
   build:
     commands:
       - echo "Building the Docker image..."
-      - docker build -t "${ECR_IMAGE_URI}:latest" .
+      - docker build -t "${ECR_IMAGE_URI}" .
 
   post_build:
     commands:
       - echo "Build completed on $(date)"
       - echo "Pushing the Docker image to ECR..."
-      - docker push "${ECR_IMAGE_URI}:latest"
+      - docker push "${ECR_IMAGE_URI}"
       - echo "Updating ECS task definition..."
       - sed -i "s|<ECR_IMAGE_URI>|${ECR_IMAGE_URI}|g" taskDefinition.json
       - aws ecs register-task-definition --cli-input-json file://taskDefinition.json
