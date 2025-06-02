@@ -4,7 +4,6 @@ env:
   variables:
     AWS_ACCOUNT_ID: "166534940158"
     AWS_DEFAULT_REGION: "us-east-1"
-    ECR_REGISTRY: "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
     ECR_REPOSITORY: "tool-go"
     IMAGE_TAG: "latest"
 
@@ -12,6 +11,7 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
+      - export ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
       - aws --version
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
   build:
@@ -23,11 +23,12 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker images...
+      - echo Pushing the Docker images to ECR...
       - docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - docker push $ECR_REGISTRY/$ECR_REPOSITORY:$CODEBUILD_RESOLVED_SOURCE_VERSION
       - echo Writing image definitions file...
-      - printf '[{"name":"CONTAINER_NAME","imageUri":"%s"}]' $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG > imagedefinitions-elixir.json
+      - printf '[{"name":"CONTAINER_NAME","imageUri":"%s"}]' $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG > imagedefinitions.json
+
 artifacts:
   files:
-    - imagedefinitions-elixir.json
+    - imagedefinitions.json
